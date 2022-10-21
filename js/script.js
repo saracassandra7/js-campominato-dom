@@ -1,31 +1,24 @@
-/*L’utente indica un livello di difficoltà in base al quale viene generata una griglia di gioco quadrata, in cui ogni cella contiene un numero tra quelli compresi in un range:
-con difficoltà 1 => tra 1 e 100
-con difficoltà 2 => tra 1 e 81
-con difficoltà 3 => tra 1 e 49
-Il computer deve generare 16 numeri casuali nello stesso range della difficoltà prescelta: le bombe.
-I numeri nella lista delle bombe non possono essere duplicati.
-In seguito l’utente clicca su una cella: se il numero è presente nella lista dei numeri generati - abbiamo calpestato una bomba - la cella si colora di rosso e la partita termina, altrimenti la cella cliccata si colora di azzurro e l’utente può continuare a cliccare sulle altre celle.
-La partita termina quando il giocatore clicca su una bomba o raggiunge il numero massimo possibile di numeri consentiti.
-Al termine della partita il software deve comunicare il punteggio, cioè il numero di volte che l’utente ha cliccato su una cella che non era una bomba.
-
+/*
 1) fare la griglia, che si trova nel game wrapper, compare al click di play ed ha una dimensione diversa in base al livello
-2)una volta generata la griglia, gener le celle. Ognuna dovrà avere un ID
-3) generare le bombe */
+2)una volta generata la griglia, genero le celle. Ognuna dovrà avere un ID
+3) generare le bombe
+4) gestire il click della cella: se c'è una bomba la cella diventa rossa e il gioco finisce, altrimenti diventa blu e si può continuare a giocare, ma solo se ha ancora dei tentativi
+5) esprimere i risultati (vinto o perso)*/
 
 const main = document.querySelector('.game-wrapper');
 const playBtn = document.querySelector('#play');
 const levelSelect = document.querySelector('#level');
 
 const gridLevels = [100, 81, 49];
-const BOMBS_NUMBER = 16;
+const BOMBS_NUMBER = 2;
 let bombs = [];
+let score = 0;
 
 playBtn.addEventListener('click', play);
 
 function play(){
   //in base al value stabilisco in numero di celle (cambia in base al livello scelto);
   const cellNumbers = gridLevels[levelSelect.value];
-  reset();
 
   //genero la griglia tramite una funzione
   generatePlayGround(cellNumbers);
@@ -56,6 +49,10 @@ function generateCell (cellId, cellNumbers){
   //creo proprietà custom per assegnare Id alla cella
   cell.cellId = cellId;
   cell.innerHTML = ` <span>${cellId}</span>`;
+
+  //evento al click della cella
+  cell.addEventListener('click', handleClickCell);
+
   return cell;
 }
 
@@ -77,11 +74,42 @@ function generateBombs(cellNumbers){
   return bombsGenerated;
 }
 
+//funzione che gestisce il click della cella
+function handleClickCell(){
+  console.log(this.cellId);
+
+  //verifico se ho pestato una bomba, ovvero de l'Id della cella è presente nell'array bombs
+  if(! bombs.includes(this.cellId)){
+    //aggiungo classe della cella cliccata
+    this.classList.add('clicked'); 
+    score++;
+    
+    const cells = document.getElementsByClassName('cell');
+    if(score === cells.length - BOMBS_NUMBER){
+      endGame(true);
+    }
+
+  } else {
+    endGame(false);
+    this.classList.add('bombed');
+  }
+}
+
+//funzione che gestisce la fine del gioco
+function endGame(isWin){
+  let msg;
+
+  const cells = document.getElementsByClassName('cell');
+  if(isWin){
+    msg = `HAI VINTO! Hai cliccato tutte le caselle giuste!`
+
+  }else{
+    msg = `HAI PERSO! Hai fatto ${score} punti su ${cells.length - BOMBS_NUMBER} possibilità!`
+  }
+
+  document.querySelector('.endMessage').innerHTML = msg;
+}
 
 function generateRandomNumber(min, max) {
   return Math.floor(Math.random()*(max - min + 1)) + min;
-}
-
-function reset() {
-  main.innerHTML= ' ';
 }

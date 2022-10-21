@@ -45,3 +45,8 @@ main{
   background-color: lime;
   color: white;
 }
+
+.bombed{
+  background-color: red;
+  color: white;
+}
