@@ -1,0 +1,38 @@
+main{
+  background-color: aqua;
+  height: 100vh; /*da togliere?*/
+}
+
+.grid{
+  width: 500px;
+  height: 500px;
+}
+
+.cell{
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.square100{
+  width: calc(100% / 10);
+  height: calc(100% / 10);
+}
+
+.square81{
+  width: calc(100% / 9);
+  height: calc(100% / 9);
+}
+
+.square49{
+  width: calc(100% / 7);
+  height: calc(100% / 7);
+}
+
+.clicked{
+  background-color: lime;
+  color: white;
+}
