@@ -10,7 +10,7 @@ const playBtn = document.querySelector('#play');
 const levelSelect = document.querySelector('#level');
 
 const gridLevels = [100, 81, 49];
-const BOMBS_NUMBER = 2;
+const BOMBS_NUMBER = 16;
 let bombs = [];
 let score = 0;
 
